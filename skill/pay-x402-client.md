@@ -7,25 +7,30 @@ How an agent pays per request for any x402-paywalled API, MCP server, or other a
 ## Install
 
 ```bash
-npm install @x402/fetch @x402/svm @solana/web3.js
+npm install @x402/fetch @x402/svm @solana/kit @scure/base
 ```
 
-`@x402/fetch` wraps `fetch` and transparently handles the 402 → sign → retry loop. `@x402/svm` provides the Solana (SVM) payment scheme.
+`@x402/fetch` wraps `fetch` and transparently handles the 402 → sign → retry loop. `@x402/svm` provides the Solana (SVM) payment scheme + the signer adapter; the signer is built on `@solana/kit` (web3.js v2), not the legacy `@solana/web3.js`.
 
 ## Minimal client
 
 ```ts
-import { wrapFetchWithPayment } from "@x402/fetch";
-import { Keypair } from "@solana/web3.js";
+import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+import { ExactSvmScheme, toClientSvmSigner } from "@x402/svm";
+import { createKeyPairSignerFromBytes } from "@solana/kit";
+import { base58 } from "@scure/base";
 
 // DEV ONLY. In production the signer is a policy-gated wallet, not a raw key —
 // see spending-controls.md (Squads spending limit / Privy / Turnkey / CDP).
-const keypair = Keypair.fromSecretKey(
-  Uint8Array.from(JSON.parse(process.env.SOLANA_PRIVATE_KEY!))
-);
+const kp = await createKeyPairSignerFromBytes(base58.decode(process.env.SVM_PRIVATE_KEY!));
+const signer = toClientSvmSigner(kp);
 
-// Wrap fetch once. Every 402 is paid + retried automatically.
-const fetch402 = wrapFetchWithPayment(globalThis.fetch, { wallet: keypair });
+const NETWORK = process.env.X402_NETWORK!; // devnet "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1"
+
+// Wrap fetch once. Every 402 is paid + retried automatically, within the schemes you allow.
+const fetch402 = wrapFetchWithPaymentFromConfig(fetch, {
+  schemes: [{ network: NETWORK, client: new ExactSvmScheme(signer) }],
+});
 
 const res = await fetch402("https://api.example.com/x402/quote?pair=SOL-USDC", {
   headers: { Accept: "application/json" },
@@ -33,7 +38,7 @@ const res = await fetch402("https://api.example.com/x402/quote?pair=SOL-USDC", {
 const data = await res.json();
 ```
 
-> Some versions export the interceptor as `withPaymentInterceptor(fetch, { wallet })` — it is the same wrapper. Check the installed version (see [resources.md](resources.md)).
+> `@x402/fetch` also exports `wrapFetchWithPayment(fetch, x402Client)` if you build the `x402Client` yourself. Confirm the `ExactSvmScheme` constructor + import subpath against the version you install (shape verified vs `@x402/*@2.16`) — see [resources.md](resources.md).
 
 ## The flow (what the wrapper does for you)
 
@@ -58,16 +63,18 @@ Re-requesting within a server's cache TTL is typically **free** — the server r
 The raw wrapper will pay *every* 402 with no ceiling. For an autonomous agent, gate it behind a budget so a loop or injection can't bleed the wallet. This is a client-side guard; pair it with on-chain enforcement from [spending-controls.md](spending-controls.md) for defense in depth.
 
 ```ts
-import { wrapFetchWithPayment } from "@x402/fetch";
+import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
 
 interface Budget {
   perRequestMaxUsd: number;   // reject any single payment above this
   sessionCapUsd: number;      // total across this run
 }
 
-function budgetedFetch(baseFetch: typeof fetch, wallet: any, budget: Budget) {
+// `schemes` is the same [{ network, client: new ExactSvmScheme(signer) }] array
+// passed to wrapFetchWithPaymentFromConfig in the minimal client above.
+function budgetedFetch(baseFetch: typeof fetch, schemes: any[], budget: Budget) {
   let spentUsd = 0;
-  const paid = wrapFetchWithPayment(baseFetch, { wallet });
+  const paid = wrapFetchWithPaymentFromConfig(baseFetch, { schemes });
 
   return async function (url: string, init?: RequestInit): Promise<Response> {
     // 1. Probe price first: an unpaid request returns 402 + PAYMENT-REQUIRED.
@@ -89,7 +96,7 @@ function budgetedFetch(baseFetch: typeof fetch, wallet: any, budget: Budget) {
 }
 
 // parsePriceUsd / recordReceipt are app-provided; the PAYMENT-REQUIRED header
-// carries the price + mint per the x402 v2 spec.
+// carries base64-encoded payment requirements (amount + mint) per the x402 v2 spec.
 ```
 
 > Design note: probe-then-pay costs one extra round trip but is the only way to enforce a ceiling *before* funds move when using the auto-wrapper. If you control the call site, prefer reading `PAYMENT-REQUIRED` from the first 402 you already receive rather than a separate probe.

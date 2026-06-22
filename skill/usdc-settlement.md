@@ -13,7 +13,7 @@ Prefer the constant exported by `@x402/svm` over hardcoding when the package pro
 
 ## Network ids (CAIP-2)
 
-x402 v2 identifies networks by CAIP-2: mainnet `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`, devnet `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1…`. Pull these from `@x402/svm` constants — they must match the mint's network or settlement fails.
+x402 v2 identifies networks by CAIP-2: mainnet `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`, devnet `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`. Pull these from `@x402/svm` constants — they must match the mint's network or settlement fails.
 
 ## Decimals & atomic units
 
@@ -69,7 +69,7 @@ Canonical USDC is a classic SPL token. If you ever accept a **Token-2022** asset
 
 ## Devnet → mainnet
 
-1. Build and test against devnet: devnet USDC mint, devnet CAIP-2 id, `https://x402.org/facilitator`.
+1. Build and test against devnet: devnet USDC mint, devnet CAIP-2 id, `https://facilitator.x402.org`.
 2. Fund a devnet wallet with devnet USDC; run the full pay/receive loop.
 3. Switch mint + network id + facilitator URL to mainnet **only** after the devnet loop passes end to end. Keep all three env-driven so the switch is config, not code.
 

@@ -17,6 +17,8 @@ Canonical links, packages, and constants for the 2026 agent-payments stack. The 
 | `x402-solana` (npm) | Community Solana implementation of x402 v2 — alternative to `@x402/svm` |
 | `@faremeter/payment-solana` · `@faremeter/fetch` (Corbits) | Solana-first SDK alternative |
 
+> Verified on npm (June 2026): the scoped `@x402/*` set (`@x402/core`, `@x402/svm`, `@x402/fetch`, `@x402/express`, `@x402/evm`) is at **2.16.0**; the non-scoped `x402` / `x402-express` / `x402-fetch` are at **1.2.0** (older shape). Pin the scoped 2.x set for new builds.
+
 ### Custody & controls
 | Package / service | Role |
 |-------------------|------|
@@ -31,7 +33,7 @@ Canonical links, packages, and constants for the 2026 agent-payments stack. The 
 
 | Facilitator | URL | Networks |
 |-------------|-----|----------|
-| x402.org (testnet) | `https://x402.org/facilitator` | Base Sepolia + Solana devnet |
+| x402.org (testnet) | `https://facilitator.x402.org` | Base Sepolia + Solana devnet (older docs: `https://x402.org/facilitator`) |
 | Coinbase CDP (prod) | `https://api.cdp.coinbase.com/platform/v2/x402` | Base + Solana |
 | PayAI (prod) | `https://facilitator.payai.network` | Covers tx fees |
 | Kora (self-host) | Kora CLI / `surfpool` | Solana-native, fee-abstracted |
@@ -55,6 +57,7 @@ If a tutorial uses `X-Payment` with `x402Version: 1`, it's v1 — translate to v
 USDC mainnet mint : EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v   (6 decimals)
 USDC devnet  mint : 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU   (6 decimals)
 Solana mainnet CAIP-2 : solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp
+Solana devnet  CAIP-2 : solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1
 Solana decimals  : SOL = 9 · USDC = 6
 x402 Solana scheme : exact (ExactSvmScheme)
 ```
