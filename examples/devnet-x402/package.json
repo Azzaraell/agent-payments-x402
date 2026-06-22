@@ -1,0 +1,12 @@
+{
+  "name": "devnet-x402-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Runnable, zero-dependency model of the x402 v2 pay/get-paid loop plus enforced spending controls. See README.md.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "demo": "node demo.js",
+    "test": "node --test"
+  }
+}
