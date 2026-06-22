@@ -14,7 +14,7 @@ Steps:
 3. Wrap the target route with `paymentMiddleware`:
    - `payTo` = the project's base58 Solana receiving address (env: `PAYTO_SOLANA_ADDRESS`).
    - Per-route price (ask the user if unknown; suggest a sensible micro-price).
-   - `network: "solana"`, `scheme: "exact"`.
+   - `network` = the Solana CAIP-2 id (from `@x402/svm` constants / `X402_NETWORK` env), `scheme: "exact"`.
    - Facilitator URL from env (`X402_FACILITATOR_URL`) — default `https://x402.org/facilitator` for devnet.
 4. Ensure the `payTo` address has a USDC ATA (create if missing).
 5. Use a `"0"` settlement override for cached/free responses.

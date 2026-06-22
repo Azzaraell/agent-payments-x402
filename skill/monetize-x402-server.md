@@ -27,13 +27,17 @@ import { paymentMiddleware } from "@x402/express";
 
 const app = express();
 
+// Network is a CAIP-2 id in v2. Source it from @x402/svm constants or env —
+// mainnet "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", devnet "solana:EtWTRABZ…".
+const NETWORK = process.env.X402_NETWORK!;
+
 // payTo = your Solana receiving address (base58). Price is per-route.
 app.use(
   paymentMiddleware(
     process.env.PAYTO_SOLANA_ADDRESS!, // base58, NOT a 0x EVM address
     {
-      "GET /premium/quote":   { price: "$0.001", network: "solana", scheme: "exact" },
-      "POST /premium/analyze": { price: "$0.05",  network: "solana", scheme: "exact" },
+      "GET /premium/quote":    { price: "$0.001", network: NETWORK, scheme: "exact" },
+      "POST /premium/analyze": { price: "$0.05",  network: NETWORK, scheme: "exact" },
     },
     {
       // Facilitator verifies + settles so your server stays off-chain.
@@ -48,6 +52,8 @@ app.get("/premium/quote", (_req, res) => {
 
 app.listen(3000);
 ```
+
+> Confirm the exact `paymentMiddleware` argument/options shape against the version of `@x402/express` you install — the protocol is stable (v2 headers, `exact` scheme, CAIP-2 ids) but middleware ergonomics evolve across releases.
 
 Behind the scenes the middleware:
 1. Returns **`402 Payment Required`** + a **`PAYMENT-REQUIRED`** header (price, `payTo`, network, scheme, USDC mint) when payment is absent.
@@ -83,8 +89,9 @@ To charge other agents for your MCP tools, paywall the MCP server's HTTP transpo
 
 ```ts
 // Price the MCP HTTP endpoint; each tool invocation that hits it settles in USDC.
+// NETWORK = CAIP-2 id from @x402/svm/env (see above).
 app.use(paymentMiddleware(PAYTO, {
-  "POST /mcp": { price: "$0.002", network: "solana", scheme: "exact" },
+  "POST /mcp": { price: "$0.002", network: NETWORK, scheme: "exact" },
 }, { facilitator: { url: FACILITATOR_URL } }));
 ```
 
