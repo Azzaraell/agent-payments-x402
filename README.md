@@ -3,7 +3,6 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Solana](https://img.shields.io/badge/Solana-mainnet-black?logo=solana)
 ![x402](https://img.shields.io/badge/x402-v2-green)
-![Claude Code](https://img.shields.io/badge/Claude_Code-skill-orange)
 
 **The money layer for AI agents on Solana.** A progressively-loaded Claude Code skill that teaches an agent — and its builder — to **pay** for resources, **get paid** for its own services, and **spend safely** behind enforced, non-custodial limits.
 
@@ -29,11 +28,11 @@ The ecosystem has the *pieces* — x402 for settlement, Squads/Privy/Turnkey/Cro
 
 | Pillar | What the agent can do | Skill file |
 |--------|-----------------------|-----------|
-| 💸 **Pay** | Consume any x402-paywalled API / MCP / agent — per request, in USDC, no API key | [`pay-x402-client.md`](skill/pay-x402-client.md) |
-| 🏷️ **Get paid** | Paywall its own API / MCP behind HTTP 402 and settle in USDC | [`monetize-x402-server.md`](skill/monetize-x402-server.md) |
-| 🔒 **Spend safely** | Hold keys non-custodially with **enforced** caps, allowlists, and a kill switch | [`agent-wallets.md`](skill/agent-wallets.md) · [`spending-controls.md`](skill/spending-controls.md) |
-| ✅ **Authorize** | Prove it may spend a *user's* money (AP2 mandates) when acting on someone's behalf | [`mandates-ap2.md`](skill/mandates-ap2.md) |
-| ⚙️ **Settle** | Get USDC mints, decimals, ATAs, gasless, and receipts right | [`usdc-settlement.md`](skill/usdc-settlement.md) |
+| **Pay** | Consume any x402-paywalled API / MCP / agent — per request, in USDC, no API key | [`pay-x402-client.md`](skill/pay-x402-client.md) |
+| **Get paid** | Paywall its own API / MCP behind HTTP 402 and settle in USDC | [`monetize-x402-server.md`](skill/monetize-x402-server.md) |
+| **Spend safely** | Hold keys non-custodially with **enforced** caps, allowlists, and a kill switch | [`agent-wallets.md`](skill/agent-wallets.md) · [`spending-controls.md`](skill/spending-controls.md) |
+| **Authorize** | Prove it may spend a *user's* money (AP2 mandates) when acting on someone's behalf | [`mandates-ap2.md`](skill/mandates-ap2.md) |
+| **Settle** | Get USDC mints, decimals, ATAs, gasless, and receipts right | [`usdc-settlement.md`](skill/usdc-settlement.md) |
 
 ## The mental model (three layers, kept separate)
 
@@ -67,10 +66,14 @@ x402 is the **stablecoin settlement extension of AP2** — adopt it alone (most 
 │   └── audit-agent-spending.md     # /audit-agent-spending — find god-mode footguns
 ├── rules/
 │   └── payments.md                 # auto-loads on payment/wallet files — safety law
+├── examples/
+│   └── devnet-x402/                # runnable model of the pay→settle loop + enforced controls (12 passing tests)
 ├── install.sh
 ├── LICENSE                         # MIT
 └── README.md
 ```
+
+A runnable proof of the pay → settle → controls loop lives in [`examples/devnet-x402/`](examples/devnet-x402/): `node demo.js` and `node --test` (12 tests), no `npm install`, no devnet funds, no keys.
 
 ## Install
 

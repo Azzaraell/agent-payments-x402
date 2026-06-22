@@ -99,6 +99,8 @@ Before any agent goes near mainnet funds, confirm **all** of these — the [paym
 - [ ] Secrets via env/secret manager, never committed. Wallet files gitignored.
 - [ ] Devnet-tested before mainnet. Amounts handled in atomic units (USDC ×10^6).
 
+A runnable, offline model of this baseline — the pay→settle loop with the per-tx cap, session budget, allowlist, and kill switch enforced — is in [`examples/devnet-x402/`](../examples/devnet-x402/) (`node --test`, 12 passing tests).
+
 ### 4. Commands
 
 | Command | Purpose |
