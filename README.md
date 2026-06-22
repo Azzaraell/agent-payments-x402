@@ -15,7 +15,7 @@
 AI agents increasingly need to move money: pay per-call for data and compute via [x402](https://github.com/coinbase/x402), settle with other agents, and charge for their own tools. But the pattern almost everyone ships is a **footgun**:
 
 ```ts
-// ⚠️ The god-mode default — present in most agent-kit quickstarts
+// The god-mode default — present in most agent-kit quickstarts
 const keypair = Keypair.fromSecretKey(bs58.decode(process.env.SOLANA_PRIVATE_KEY!));
 const wallet  = new KeypairWallet(keypair); // unlimited authority over every lamport
 ```

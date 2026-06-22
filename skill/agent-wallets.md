@@ -63,7 +63,7 @@ These are detailed, with enforcement code, in [spending-controls.md](spending-co
 ## Anti-pattern (what this whole file exists to prevent)
 
 ```ts
-// ❌ NEVER in production: unlimited authority, no cap, no allowlist, no audit.
+// NEVER in production: unlimited authority, no cap, no allowlist, no audit.
 const wallet = new KeypairWallet(
   Keypair.fromSecretKey(bs58.decode(process.env.SOLANA_PRIVATE_KEY!))
 );

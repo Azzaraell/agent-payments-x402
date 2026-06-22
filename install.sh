@@ -50,7 +50,7 @@ fi
 
 cat <<EOF
 
-✅ Installed.
+Installed.
    skill    -> $BASE/skills/ext/agent-payments/SKILL.md
    agents   -> agent-payments-engineer, payment-safety-auditor
    commands -> /add-x402-paywall, /setup-agent-wallet, /audit-agent-spending

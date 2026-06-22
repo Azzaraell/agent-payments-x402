@@ -13,7 +13,7 @@ user-invocable: true
 AI agents increasingly need to move money: pay per-call for data/compute, settle with other agents, and charge for their own services. The pattern almost everyone ships today is a **footgun**:
 
 ```ts
-// ⚠️ The god-mode default — seen in most agent kits, including solana-agent-kit quickstarts
+// The god-mode default — seen in most agent kits, including solana-agent-kit quickstarts
 const keypair = Keypair.fromSecretKey(bs58.decode(process.env.SOLANA_PRIVATE_KEY!));
 const wallet  = new KeypairWallet(keypair); // unlimited authority over every lamport
 ```
