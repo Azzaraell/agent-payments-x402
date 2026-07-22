@@ -22,3 +22,6 @@ build/
 
 # Local agent guide — kept on disk, not part of the skill payload
 CLAUDE.md
+
+# Grant application package — goes to Drive, not the public repo (contains session transcript)
+grant-application/
