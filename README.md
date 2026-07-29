@@ -8,6 +8,8 @@
 
 > Built to slot into the [Solana AI Kit](https://github.com/solanabr/solana-ai-kit) as an `ext/` skill, following the [`solana-game-skill`](https://github.com/solanabr/solana-game-skill) structure.
 
+Reading this as a Claude Code user: the repo is a complete `.claude/` bundle, not a whitepaper. `skill/SKILL.md` is the progressive-loading hub that routes to 7 topic files, `agents/` holds 2 subagents (one builds the money path, one audits it adversarially), `commands/` adds 3 slash commands, and `rules/payments.md` auto-loads its safety rules whenever payment or wallet files are in context. One install script wires all of it into a project.
+
 ---
 
 ## The problem
